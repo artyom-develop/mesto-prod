@@ -20,4 +20,4 @@ npm run build
 
 Публикация на GitHub Pages выполняется через GitHub Actions и артефакт сборки из папки `dist`.
 
-Сайт на GitHub Pages: [https://PolzovatelYouTube.github.io/mesto-ad-ok/](https://PolzovatelYouTube.github.io/mesto-ad-ok/)
+Сайт на GitHub Pages: [https://artyom-develop.github.io/mesto-prod/](https://PolzovatelYouTube.github.io/mesto-ad-ok/)
