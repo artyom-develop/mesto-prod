@@ -5,6 +5,21 @@ const getTemplate = () => {
     .cloneNode(true);
 };
 
+export const removeCardElement = (cardElement) => {
+  cardElement.remove();
+};
+
+export const updateCardLikeState = (cardElement, likes, currentUserId) => {
+  const likeButton = cardElement.querySelector(".card__like-button");
+  const likeCount = cardElement.querySelector(".card__like-count");
+
+  likeButton.classList.toggle(
+    "card__like-button_is-active",
+    likes.some((user) => user._id === currentUserId)
+  );
+  likeCount.textContent = likes.length;
+};
+
 export const createCardElement = (
   data,
   { currentUserId, onPreviewPicture, onLikeCard, onDeleteCard, onInfoClick }

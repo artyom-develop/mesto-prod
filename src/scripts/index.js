@@ -7,12 +7,17 @@ import {
   setUserAvatar,
   setUserInfo,
 } from "./components/api.js";
-import { createCardElement } from "./components/card.js";
+import {
+  createCardElement,
+  removeCardElement,
+  updateCardLikeState,
+} from "./components/card.js";
 import {
   closeModalWindow,
   openModalWindow,
   setCloseModalWindowEventListeners,
 } from "./components/modal.js";
+import { clearValidation, enableValidation } from "./components/validation.js";
 
 // DOM узлы
 const placesWrap = document.querySelector(".places__list");
@@ -36,6 +41,10 @@ const cardInfoModalInfo = cardInfoModalWindow.querySelector(".popup__info");
 const cardInfoModalText = cardInfoModalWindow.querySelector(".popup__text");
 const cardInfoModalList = cardInfoModalWindow.querySelector(".popup__list");
 
+const removeCardModalWindow = document.querySelector(".popup_type_remove-card");
+const removeCardForm = removeCardModalWindow.querySelector(".popup__form");
+const removeCardSubmitButton = removeCardForm.querySelector(".popup__button");
+
 const openProfileFormButton = document.querySelector(".profile__edit-button");
 const openCardFormButton = document.querySelector(".profile__add-button");
 
@@ -55,6 +64,16 @@ const infoUserPreviewTemplate = document.getElementById("popup-info-user-preview
 
 let currentUserId = "";
 let currentUserData = null;
+let cardToDelete = null;
+
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 const formatDate = (date) =>
   date.toLocaleDateString("ru-RU", {
@@ -116,17 +135,13 @@ const handleInfoClick = (cardId) => {
     });
 };
 
-const handleCardLike = ({ cardData, likeButton, likeCount }) => {
+const handleCardLike = ({ cardData, cardElement, likeButton }) => {
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
 
   changeLikeCardStatus(cardData._id, isLiked)
     .then((updatedCard) => {
       cardData.likes = updatedCard.likes;
-      likeButton.classList.toggle(
-        "card__like-button_is-active",
-        updatedCard.likes.some((user) => user._id === currentUserId)
-      );
-      likeCount.textContent = updatedCard.likes.length;
+      updateCardLikeState(cardElement, updatedCard.likes, currentUserId);
     })
     .catch((err) => {
       console.log(err);
@@ -134,13 +149,8 @@ const handleCardLike = ({ cardData, likeButton, likeCount }) => {
 };
 
 const handleCardDelete = ({ cardData, cardElement }) => {
-  deleteCardApi(cardData._id)
-    .then(() => {
-      cardElement.remove();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  cardToDelete = { cardData, cardElement };
+  openModalWindow(removeCardModalWindow);
 };
 
 const setButtonText = (buttonElement, text) => {
@@ -201,6 +211,29 @@ const handleAvatarFromSubmit = (evt) => {
     });
 };
 
+const handleRemoveCardSubmit = (evt) => {
+  evt.preventDefault();
+
+  if (!cardToDelete) {
+    return;
+  }
+
+  setButtonText(removeCardSubmitButton, "Удаление...");
+
+  deleteCardApi(cardToDelete.cardData._id)
+    .then(() => {
+      removeCardElement(cardToDelete.cardElement);
+      closeModalWindow(removeCardModalWindow);
+      cardToDelete = null;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      setButtonText(removeCardSubmitButton, "Да");
+    });
+};
+
 const handleCardFormSubmit = (evt) => {
   evt.preventDefault();
   setButtonText(cardSubmitButton, "Создание...");
@@ -234,22 +267,28 @@ const handleCardFormSubmit = (evt) => {
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 cardForm.addEventListener("submit", handleCardFormSubmit);
 avatarForm.addEventListener("submit", handleAvatarFromSubmit);
+removeCardForm.addEventListener("submit", handleRemoveCardSubmit);
+
+enableValidation(validationConfig);
 
 openProfileFormButton.addEventListener("click", () => {
   profileTitleInput.value = currentUserData ? currentUserData.name : profileTitle.textContent;
   profileDescriptionInput.value = currentUserData
     ? currentUserData.about
     : profileDescription.textContent;
+  clearValidation(profileForm, validationConfig);
   openModalWindow(profileFormModalWindow);
 });
 
 profileAvatar.addEventListener("click", () => {
   avatarForm.reset();
+  clearValidation(avatarForm, validationConfig);
   openModalWindow(avatarFormModalWindow);
 });
 
 openCardFormButton.addEventListener("click", () => {
   cardForm.reset();
+  clearValidation(cardForm, validationConfig);
   openModalWindow(cardFormModalWindow);
 });
 
@@ -269,6 +308,8 @@ Promise.all([getCardList(), getUserInfo()])
   .catch((err) => {
     console.log(err);
   });
+
+clearValidation(removeCardForm, validationConfig);
 
 const allPopups = document.querySelectorAll(".popup");
 allPopups.forEach((popup) => {
