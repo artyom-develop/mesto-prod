@@ -18,6 +18,6 @@ npm run dev
 npm run build
 ```
 
-Публичный репозиторий для GitHub Pages должен публиковать сборку из ветки `gh-pages`, а исходный код остаётся в основной ветке.
+Публикация на GitHub Pages выполняется через GitHub Actions и артефакт сборки из папки `dist`.
 
 Сайт на GitHub Pages: [https://PolzovatelYouTube.github.io/mesto-ad-ok/](https://PolzovatelYouTube.github.io/mesto-ad-ok/)
