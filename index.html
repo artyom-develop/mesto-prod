@@ -49,6 +49,10 @@
                 id="user-name"
                 class="popup__input popup__input_type_name"
                 required
+                minlength="2"
+                maxlength="40"
+                pattern="[A-Za-zА-Яа-яЁё -]+"
+                title="Допустимы только латинские и кириллические буквы, пробел и дефис"
                 placeholder="Имя"
               />
               <span class="popup__error user-name-error"></span>
@@ -60,6 +64,8 @@
                 id="user-description"
                 class="popup__input popup__input_type_description"
                 required
+                minlength="2"
+                maxlength="200"
                 placeholder="Занятие"
               />
               <span class="popup__error user-description-error"></span>
@@ -81,6 +87,10 @@
                 id="place-name"
                 class="popup__input popup__input_type_card-name"
                 required
+                minlength="2"
+                maxlength="30"
+                pattern="[A-Za-zА-Яа-яЁё -]+"
+                title="Допустимы только латинские и кириллические буквы, пробел и дефис"
                 placeholder="Название"
               />
               <span class="popup__error place-name-error"></span>
@@ -142,7 +152,7 @@
       </div>
 
       <div class="popup popup_type_remove-card">
-        <div class="popup__content">
+        <div class="popup__content popup__content_content_remove-card">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Вы уверены?</h3>
           <form class="popup__form" name="remove-card" novalidate>

@@ -1,10 +1,18 @@
 const hasInvalidInput = (inputElements) => inputElements.some((inputElement) => !inputElement.validity.valid);
 
+const getValidationMessage = (inputElement, config) => {
+  if (inputElement.validity.patternMismatch) {
+    return inputElement.title || config.patternMismatchMessage || inputElement.validationMessage;
+  }
+
+  return inputElement.validationMessage;
+};
+
 const showInputError = (formElement, inputElement, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
   inputElement.classList.add(config.inputErrorClass);
-  errorElement.textContent = inputElement.validationMessage;
+  errorElement.textContent = getValidationMessage(inputElement, config);
   errorElement.classList.add(config.errorClass);
 };
 

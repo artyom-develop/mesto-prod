@@ -36,12 +36,7 @@ export const createCardElement = (
   cardElement.querySelector(".card__title").textContent = data.name;
   likeCount.textContent = data.likes.length;
 
-  const isOwner = data.owner && data.owner._id === currentUserId;
   const isLiked = data.likes.some((user) => user._id === currentUserId);
-
-  if (!isOwner) {
-    deleteButton.remove();
-  }
 
   if (isLiked) {
     likeButton.classList.add("card__like-button_is-active");
@@ -53,7 +48,7 @@ export const createCardElement = (
     );
   }
 
-  if (isOwner && onDeleteCard) {
+  if (onDeleteCard) {
     deleteButton.addEventListener("click", () =>
       onDeleteCard({ cardData: data, cardElement })
     );

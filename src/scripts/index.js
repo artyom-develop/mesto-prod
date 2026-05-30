@@ -73,6 +73,7 @@ const validationConfig = {
   inactiveButtonClass: "popup__button_disabled",
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
+  patternMismatchMessage: "Допустимы только латинские и кириллические буквы, пробел и дефис",
 };
 
 const formatDate = (date) =>
@@ -150,6 +151,7 @@ const handleCardLike = ({ cardData, cardElement, likeButton }) => {
 
 const handleCardDelete = ({ cardData, cardElement }) => {
   cardToDelete = { cardData, cardElement };
+  setButtonText(removeCardSubmitButton, "Да");
   openModalWindow(removeCardModalWindow);
 };
 
@@ -171,7 +173,7 @@ const renderCard = (cardData) => {
 
 const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
-  setButtonText(profileSubmitButton, "Сохранение...");
+  setButtonText(profileSubmitButton, "Сохранение…");
 
   setUserInfo({
     name: profileTitleInput.value,
@@ -193,7 +195,7 @@ const handleProfileFormSubmit = (evt) => {
 
 const handleAvatarFromSubmit = (evt) => {
   evt.preventDefault();
-  setButtonText(avatarSubmitButton, "Сохранение...");
+  setButtonText(avatarSubmitButton, "Сохранение…");
 
   setUserAvatar({
     avatar: avatarInput.value,
@@ -218,7 +220,7 @@ const handleRemoveCardSubmit = (evt) => {
     return;
   }
 
-  setButtonText(removeCardSubmitButton, "Удаление...");
+  setButtonText(removeCardSubmitButton, "Удаление…");
 
   deleteCardApi(cardToDelete.cardData._id)
     .then(() => {
@@ -236,7 +238,7 @@ const handleRemoveCardSubmit = (evt) => {
 
 const handleCardFormSubmit = (evt) => {
   evt.preventDefault();
-  setButtonText(cardSubmitButton, "Создание...");
+  setButtonText(cardSubmitButton, "Создание…");
 
   addCard({
     name: cardNameInput.value,
