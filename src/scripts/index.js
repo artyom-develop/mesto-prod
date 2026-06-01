@@ -121,13 +121,14 @@ const handleInfoClick = (cardId) => {
         return;
       }
 
-      cardInfoModalTitle.textContent = cardData.name;
+      cardInfoModalTitle.textContent = "Информация о карточке";
       cardInfoModalInfo.replaceChildren(
-        createInfoString("Автор:", cardData.owner.name),
+        createInfoString("Описание:", cardData.name),
         createInfoString("Дата создания:", formatDate(new Date(cardData.createdAt))),
-        createInfoString("Лайков:", String(cardData.likes.length))
+        createInfoString("Владелец:", cardData.owner.name),
+        createInfoString("Количество лайков:", String(cardData.likes.length))
       );
-      cardInfoModalText.textContent = "Пользователи, лайкнувшие карточку";
+      cardInfoModalText.textContent = "Лайкнули:";
       cardInfoModalList.replaceChildren(...cardData.likes.map(createUserPreview));
       openModalWindow(cardInfoModalWindow);
     })
